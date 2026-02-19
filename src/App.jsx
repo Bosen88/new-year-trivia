@@ -540,7 +540,7 @@ export default function App() {
                         <CheckCircle className="w-4 h-4"/> 比速度，也比準度
                     </p>
                     <p className="text-yellow-300 font-bold flex items-center gap-2">
-                        <CheckCircle className="w-4 h-4"/> 每次隨機 5 題 (共30題)
+                        <CheckCircle className="w-4 h-4"/> 每次隨機 5 題 (共50題)
                     </p>
                     <p className="text-yellow-300 font-bold flex items-center gap-2">
                         <CheckCircle className="w-4 h-4"/> 排名只保留個人最高分
