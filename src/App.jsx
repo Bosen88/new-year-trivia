@@ -18,9 +18,8 @@ import {
   doc
 } from 'firebase/firestore';
 
-// --- 內建圖示 (徹底解決外部套件找不到的錯誤) ---
+// --- 內建圖示 (取代外部套件，徹底解決 CodeSandbox 找不到依賴的錯誤) ---
 const IconWrapper = ({ children, className }) => (
-  // 已經修正 strokeLinejoin 屬性
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
     {children}
   </svg>
@@ -176,6 +175,9 @@ export default function App() {
   const [newGroupCode, setNewGroupCode] = useState('');
   const [joinGroupCode, setJoinGroupCode] = useState('');
   const [generatedLink, setGeneratedLink] = useState('');
+  // 新增密碼驗證狀態
+  const [creatorPassword, setCreatorPassword] = useState('');
+  const [isCreatorAuth, setIsCreatorAuth] = useState(false);
 
   const timerIntervalRef = useRef(null);
   const startTimeRef = useRef(0);
@@ -575,6 +577,7 @@ export default function App() {
                       <Trophy className="w-4 h-4" />
                       英雄榜
                     </button>
+                    {/* 加入群組按鈕 */}
                     {groupId === 'public' && (
                         <button 
                             onClick={() => {
@@ -590,9 +593,10 @@ export default function App() {
                 </div>
               </div>
 
+              {/* 手動加入群組區塊 */}
               {showGroupJoiner && (
                    <div className="mt-4 bg-blue-900/40 p-4 rounded-xl border border-blue-500/30 animate-in fade-in zoom-in duration-300">
-                       <p className="text-xs text-blue-200 mb-2">輸入團主給的代號 (例如: AmyShop)</p>
+                       <p className="text-xs text-blue-200 mb-2">輸入店長想要的代號 (例如: AmyShop)</p>
                        <div className="flex gap-2">
                            <input 
                              type="text" 
@@ -606,6 +610,7 @@ export default function App() {
                    </div>
               )}
 
+              {/* 團主開團區塊 */}
               <div className="pt-6 border-t border-white/10 text-center">
                   <button 
                     onClick={() => {
@@ -614,38 +619,68 @@ export default function App() {
                     }}
                     className="text-xs text-yellow-300/70 hover:text-yellow-300 underline flex items-center justify-center gap-1 mx-auto"
                   >
-                    <LinkIcon className="w-3 h-3"/> 我是團主，我要開團產生連結
+                    <LinkIcon className="w-3 h-3"/> 我是店長，我要開團產生連結
                   </button>
 
                   {showGroupCreator && (
                       <div className="mt-4 bg-yellow-900/40 p-4 rounded-xl border border-yellow-500/30 text-left space-y-3 animate-in fade-in zoom-in duration-300">
-                          <p className="text-xs text-yellow-100">設定一個代號 (如: AmyShop)，產生連結給群友，成績就會分開計算！</p>
-                          <div className="flex gap-2">
-                              <input 
-                                type="text" 
-                                placeholder="設定群組代號(英數字)" 
-                                className="flex-1 p-2 rounded bg-black/20 text-white text-sm border border-white/20"
-                                value={newGroupCode}
-                                onChange={(e) => {
-                                    setNewGroupCode(e.target.value);
-                                    setGeneratedLink(''); 
-                                }}
-                              />
-                              <button 
-                                onClick={generateGroupLink}
-                                className="bg-yellow-600 hover:bg-yellow-500 text-white text-sm px-3 rounded shrink-0"
-                              >
-                                產生
-                              </button>
-                          </div>
-                          
-                          {generatedLink && (
-                              <div className="bg-white/10 p-2 rounded space-y-2">
-                                  <div className="flex items-center justify-between gap-2">
-                                      <div className="truncate text-xs text-white/70 flex-1 bg-black/20 p-1 rounded">{generatedLink}</div>
-                                      <button onClick={copyLink} className="bg-green-600 px-2 py-1 rounded text-xs text-white shrink-0 flex items-center gap-1"><Copy className="w-3 h-3"/> 複製</button>
+                          {!isCreatorAuth ? (
+                              <>
+                                  <p className="text-xs text-yellow-100">請輸入團主專屬密碼解鎖開團功能：</p>
+                                  <div className="flex gap-2">
+                                      <input 
+                                        type="password" 
+                                        placeholder="輸入密碼" 
+                                        className="flex-1 p-2 rounded bg-black/20 text-white text-sm border border-white/20"
+                                        value={creatorPassword}
+                                        onChange={(e) => setCreatorPassword(e.target.value)}
+                                      />
+                                      <button 
+                                        onClick={() => {
+                                            if(creatorPassword === '8888') {
+                                                setIsCreatorAuth(true);
+                                            } else {
+                                                alert('密碼錯誤！您無權限開團。');
+                                                setCreatorPassword('');
+                                            }
+                                        }}
+                                        className="bg-yellow-600 hover:bg-yellow-500 text-white text-sm px-4 rounded shrink-0"
+                                      >
+                                        解鎖
+                                      </button>
                                   </div>
-                              </div>
+                              </>
+                          ) : (
+                              <>
+                                  <p className="text-xs text-yellow-100">設定一個代號 (如: AmyShop)，產生連結給群友，成績就會分開計算！</p>
+                                  <div className="flex gap-2">
+                                      <input 
+                                        type="text" 
+                                        placeholder="設定群組代號(英數字)" 
+                                        className="flex-1 p-2 rounded bg-black/20 text-white text-sm border border-white/20"
+                                        value={newGroupCode}
+                                        onChange={(e) => {
+                                            setNewGroupCode(e.target.value);
+                                            setGeneratedLink(''); 
+                                        }}
+                                      />
+                                      <button 
+                                        onClick={generateGroupLink}
+                                        className="bg-yellow-600 hover:bg-yellow-500 text-white text-sm px-3 rounded shrink-0"
+                                      >
+                                        產生
+                                      </button>
+                                  </div>
+                                  
+                                  {generatedLink && (
+                                      <div className="bg-white/10 p-2 rounded space-y-2">
+                                          <div className="flex items-center justify-between gap-2">
+                                              <div className="truncate text-xs text-white/70 flex-1 bg-black/20 p-1 rounded">{generatedLink}</div>
+                                              <button onClick={copyLink} className="bg-green-600 px-2 py-1 rounded text-xs text-white shrink-0 flex items-center gap-1"><Copy className="w-3 h-3"/> 複製</button>
+                                          </div>
+                                      </div>
+                                  )}
+                              </>
                           )}
                       </div>
                   )}
