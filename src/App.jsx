@@ -626,7 +626,7 @@ export default function App() {
                       <div className="mt-4 bg-yellow-900/40 p-4 rounded-xl border border-yellow-500/30 text-left space-y-3 animate-in fade-in zoom-in duration-300">
                           {!isCreatorAuth ? (
                               <>
-                                  <p className="text-xs text-yellow-100">請輸入團主專屬密碼解鎖開團功能：</p>
+                                  <p className="text-xs text-yellow-100">請輸入專屬密碼解鎖開團功能：</p>
                                   <div className="flex gap-2">
                                       <input 
                                         type="password" 
