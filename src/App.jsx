@@ -596,7 +596,7 @@ export default function App() {
               {/* 手動加入群組區塊 */}
               {showGroupJoiner && (
                    <div className="mt-4 bg-blue-900/40 p-4 rounded-xl border border-blue-500/30 animate-in fade-in zoom-in duration-300">
-                       <p className="text-xs text-blue-200 mb-2">輸入店長想要的代號 (例如: AmyShop)</p>
+                       <p className="text-xs text-blue-200 mb-2">輸入店長給的代號 (例如: AmyShop)</p>
                        <div className="flex gap-2">
                            <input 
                              type="text" 
@@ -619,7 +619,7 @@ export default function App() {
                     }}
                     className="text-xs text-yellow-300/70 hover:text-yellow-300 underline flex items-center justify-center gap-1 mx-auto"
                   >
-                    <LinkIcon className="w-3 h-3"/> 我是店長，我要開團產生連結
+                    <LinkIcon className="w-3 h-3"/> 我要建立專屬連結
                   </button>
 
                   {showGroupCreator && (
